@@ -218,3 +218,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Model ağırlıkları ve büyük kontrol noktaları
+*.pth
+*.pt
+*.onnx
+*.caffemodel
+*.prototxt
+checkpoints/
+models/weights/
+
+# Veri setleri
+dataset/
+data/
+test_images/
+output/
+runs/
+
+# Sanal ortam ve önbellek
+venv/
+.env
+.ipynb_checkpoints/
+
+venv/
+models/*.caffemodel
+__pycache__/
+*.pyc
