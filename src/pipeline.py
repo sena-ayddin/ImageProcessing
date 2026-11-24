@@ -46,7 +46,7 @@ def keep_original_L(orig_bgr, out_bgr):
     return (np.clip(res, 0, 1) * 255).astype(np.uint8)
 
 
-def process(img_bgr, model="finetuned", use_pre=False, use_post=True, saturation=1.2):
+def process(img_bgr, model="finetuned", use_pre=False, use_post=True, saturation=1.0):
     """BGR uint8 alır, renklendirilmiş BGR uint8 döndürür (arayüz de bunu kullanır)."""
     colorize = get_colorize(model)
     inp = preprocessing.apply_clahe(img_bgr) if use_pre else img_bgr

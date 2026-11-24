@@ -19,6 +19,8 @@ def adjust_saturation(img_bgr, factor=1.3):
     return cv2.cvtColor(hsv.astype(np.uint8), cv2.COLOR_HSV2BGR)
 
 
-def refine(img_bgr, saturation=1.3):
+def refine(img_bgr, saturation=1.0):
     out = guided_smooth_color(img_bgr)
-    return adjust_saturation(out, saturation)
+    if saturation != 1.0:
+        out = adjust_saturation(out, saturation)
+    return out
