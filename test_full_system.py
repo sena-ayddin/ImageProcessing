@@ -4,7 +4,7 @@ import cv2
 import pandas as pd
 from tqdm import tqdm
 
-from src.metrics import METRIC_COLS, METRIC_LABELS, compute_metrics
+from evaluation.metrics import METRIC_COLS, METRIC_LABELS, compute_metrics
 from src.pipeline import run_pipeline
 
 IMG_DIR = Path("data/raw/val_256")

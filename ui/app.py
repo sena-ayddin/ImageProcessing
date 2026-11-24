@@ -1,24 +1,13 @@
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, messagebox, ttk
 
 import cv2
-import numpy as np
 from PIL import Image, ImageTk
 
-from models.opencv_baseline import colorize
-from src import postprocessing
+from src.pipeline import MODEL_LABELS, finetuned_available, process, read_image
 
-MAX_SIDE = 1024      # büyük görüntüleri otomatik küçültme sınırı
-PREVIEW = (460, 460)  # önizleme kutusu boyutu
-
-
-def read_image(path):
-    """Türkçe karakterli yollarda da çalışır. Okunamazsa None döndürür."""
-    try:
-        data = np.fromfile(path, dtype=np.uint8)
-        return cv2.imdecode(data, cv2.IMREAD_COLOR)
-    except Exception:
-        return None
+MAX_SIDE = 1024
+PREVIEW = (460, 460)
 
 
 def resize_max(img, max_side=MAX_SIDE):
@@ -35,7 +24,7 @@ def to_gray3(img):
 
 
 def to_tk(img_bgr):
-    rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)  # Tkinter RGB ister
+    rgb = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2RGB)
     pil = Image.fromarray(rgb)
     pil.thumbnail(PREVIEW)
     return ImageTk.PhotoImage(pil)
@@ -51,8 +40,16 @@ class App:
         top = tk.Frame(root)
         top.pack(pady=8)
         tk.Button(top, text="Görüntü Seç", command=self.open_image).pack(side="left", padx=4)
+
+        self.model_var = tk.StringVar(value="Fine-tuned (PyTorch)")
+        ttk.Combobox(top, textvariable=self.model_var, values=list(MODEL_LABELS),
+                     state="readonly", width=20).pack(side="left", padx=4)
+
+        self.use_pre = tk.BooleanVar(value=False)
+        tk.Checkbutton(top, text="Pre-processing", variable=self.use_pre).pack(side="left", padx=4)
         self.use_post = tk.BooleanVar(value=True)
-        tk.Checkbutton(top, text="Post-processing", variable=self.use_post).pack(side="left", padx=8)
+        tk.Checkbutton(top, text="Post-processing", variable=self.use_post).pack(side="left", padx=4)
+
         self.btn_color = tk.Button(top, text="Renklendir", command=self.run, state="disabled")
         self.btn_color.pack(side="left", padx=4)
         self.btn_save = tk.Button(top, text="Kaydet", command=self.save, state="disabled")
@@ -90,12 +87,14 @@ class App:
         self.status.config(text=f"Yüklendi: {path}{note}")
 
     def run(self):
-        self.status.config(text="İşleniyor...")
+        model = MODEL_LABELS[self.model_var.get()]
+        msg = "İşleniyor... (ilk çalıştırmada model yükleniyor, biraz sürebilir)"
+        if model == "finetuned" and not finetuned_available():
+            msg = "Uyarı: ince ayarlı ağırlık dosyası yok, ön eğitimli model kullanılıyor. " + msg
+        self.status.config(text=msg)
         self.root.update_idletasks()
         try:
-            out = colorize(self.gray)
-            if self.use_post.get():
-                out = postprocessing.refine(out, saturation=1.2)
+            out = process(self.gray, model, self.use_pre.get(), self.use_post.get())
         except Exception as e:
             messagebox.showerror("Hata", f"Renklendirme başarısız:\n{e}")
             self.status.config(text="Hata oluştu.")
@@ -123,4 +122,3 @@ if __name__ == "__main__":
     root = tk.Tk()
     App(root)
     root.mainloop()
-    
