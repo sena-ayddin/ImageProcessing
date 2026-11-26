@@ -4,8 +4,8 @@ opencv,sadece guided filter,18.7113,862.1803,12.9312,0.8926
 opencv,sadece saturation 1.1,19.7902,948.4602,13.4663,0.8813
 opencv,sadece saturation 1.2,20.8467,1034.9216,13.9245,0.8707
 opencv,guided + saturation 1.2,20.6822,1017.7360,13.8121,0.8732
-finetuned,post yok,18.5161,786.1466,12.8957,0.8954
-finetuned,sadece guided filter,18.3946,778.4278,12.7852,0.8966
-finetuned,sadece saturation 1.1,19.3172,832.6418,13.2980,0.8902
-finetuned,sadece saturation 1.2,20.2599,895.3949,13.7515,0.8835
-finetuned,guided + saturation 1.2,20.1125,884.0934,13.6196,0.8849
+finetuned,post yok,16.7516,741.9122,11.2425,0.9063
+finetuned,sadece guided filter,16.7359,740.3843,11.2341,0.9053
+finetuned,sadece saturation 1.1,17.1137,764.4142,11.2654,0.9029
+finetuned,sadece saturation 1.2,17.5776,793.6774,11.3411,0.8989
+finetuned,guided + saturation 1.2,17.5453,790.9836,11.3279,0.8976

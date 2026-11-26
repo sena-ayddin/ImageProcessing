@@ -244,3 +244,4 @@ venv/
 models/*.caffemodel
 __pycache__/
 *.pyc
+models/*.pt
